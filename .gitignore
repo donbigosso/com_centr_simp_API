@@ -11,6 +11,8 @@ db-data/
 
 # PHP
 api_source/uploads/*
+!api_source/uploads/.gitkeep
+
 vendor/
 uploads/*
 !uploads/.gitkeep
