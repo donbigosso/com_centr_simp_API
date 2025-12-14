@@ -1,0 +1,23 @@
+# Environment & secrets
+.env
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# MySQL data (if using named or bind volumes)
+mysql-data/
+db-data/
+
+# PHP
+api_source/uploads/*
+vendor/
+uploads/*
+!uploads/.gitkeep
+# OS junk
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
