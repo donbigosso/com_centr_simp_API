@@ -38,9 +38,14 @@ if (file_exists($file2)) {
 echo "<br>File 2 contents:<br>";
     echo nl2br(file_get_contents($file2));
 }
+else
+{
+    echo "<br>$file2 does not exist.";
+}
+
 echo "<br>Checking ENV variables<br>";
 echo "Secret: " . getenv('APP_SECRET') . "<br>";
 var_dump(getenv('MYSQL_DATABASE'));
-
+echo "<br><br> This line was added form MacOS"; 
 
 ?>
