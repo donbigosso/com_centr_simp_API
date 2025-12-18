@@ -12,6 +12,8 @@ db-data/
 # PHP
 api_source/uploads/*
 !api_source/uploads/.gitkeep
+#copy of index
+index copy.php 
 
 vendor/
 uploads/*
