@@ -62,7 +62,7 @@ else
 }
 
 echo "<br>Checking ENV variables<br>";
-echo "Secret: " . getenv('APP_SECRET') . "<br>";
+var_dump(getenv('API_KEYS'));
 var_dump(getenv('MYSQL_DATABASE'));
 echo "<br><br> This line was added form MacOS"; 
 

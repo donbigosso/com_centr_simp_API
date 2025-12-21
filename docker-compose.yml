@@ -7,8 +7,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      APP_SECRET: ${APP_SECRET}
-
+      API_KEYS: ${API_KEYS}   
     ports:
       - "8082:80"
     volumes:
