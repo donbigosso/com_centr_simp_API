@@ -10,7 +10,7 @@
     $user = getenv('MYSQL_USER');
     $pass = getenv('MYSQL_PASSWORD');
     $db = new DatabaseAccess('mysql', $db, $user, $pass);
-    $req_han = new ApiRequestHandler();
+    $api_request_handler = new ApiRequestHandler($db);
     $userModel = new UserModel($db);
-    echo JSON_encode($req_han->handleRequest("verify_user"));
+    echo JSON_encode($api_request_handler->handleRequest("verify_user"));
 ?>
