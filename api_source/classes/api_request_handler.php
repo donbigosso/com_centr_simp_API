@@ -9,13 +9,14 @@
            // $test_response=$this->create_api_response_array(true, "Request handled successfully", "", "", ["method_called" => $method, "params" => $params]);   
            // return $test_response;
             if ($this->checkRequestMethod()){
-                $method = strtolower($this->checkRequestMethod());
-                $test_response=["request_accepted" => true, "method" => $method, "test" => "test_result"];
+           
+                $method = $this->checkRequestMethod();
                 $test_response=$this->create_api_response_array(true, "Request handled successfully", "", "", ["method_called" => $method, "params" => $params]);   
                 return $test_response;
             }
             else{
-                echo "<h1>No request detected!</h1>";
+                $test_response=$this->create_api_response_array(false, "", "", "No valid request method found", []);   
+                return $test_response;
             }
 
         }

@@ -23,15 +23,22 @@ public function checkRequestMethod() {
     $method = $_SERVER['REQUEST_METHOD'];
     
     if ($method === 'POST') {
-        return 'POST';
+        return $this->handle_POST_Request();
     } elseif ($method === 'GET') {
-        
-        return 'GET';
+
+        return $this->handle_GET_Request();
     } else {
         // Handle other HTTP methods if needed
         return $method; // Returns PUT, DELETE, PATCH, etc.
     }
 }
-}
+    public function handle_GET_Request(){
+        return $_GET;
+    }
 
+    public function handle_POST_Request(){
+        return $_POST;
+    }
+
+}
 ?>
