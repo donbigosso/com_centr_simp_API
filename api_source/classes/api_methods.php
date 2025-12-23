@@ -68,16 +68,19 @@ class ApiMethods extends Core
         }
 
         // Dummy example request
-        if (isset($input['request']) && $input['request'] === 'list_users') {
-            $users = ['Alice', 'Bob', 'Charlie']; // Replace with real data
-            $this->sendResponse(true, "Users retrieved successfully.", "", "", ['users' => $users]);
-        } else if ((isset($input['show_gallery']) && $input['show_gallery'] === 'czarnolas')){
-            $gallery = ['image1.jpg', 'image2.jpg', 'image3.jpg']; // Replace with real data
-            $this->sendResponse(true, "Gallery retrieved successfully.", "", "", ['gallery' => $gallery]);
+        if (isset($input['request'])){
+            switch ($input['request']) {
+                case 'list_users':
+                    $users = ['Alice', 'Bob', 'Charlie'];
+                    $this->sendResponse(true, "Users retrieved successfully.", "", "", ['users' => $users]);
+                    break;
+                default:
+                $this->sendResponse(false, "", "", "Unknown 'request' value: " . $input['request']);
+            }
         } 
         else
         {
-            $this->sendResponse(false, "", "", "Unknown or missing 'request' parameter.");
+            $this->sendResponse(false, "", "", "Missing 'request' parameter.");
         }
     }
 
