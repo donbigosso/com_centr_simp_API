@@ -67,8 +67,8 @@ class ApiMethods extends Core
             return;
         }
 
-        // Dummy example action
-        if (isset($input['action']) && $input['action'] === 'list_users') {
+        // Dummy example request
+        if (isset($input['request']) && $input['request'] === 'list_users') {
             $users = ['Alice', 'Bob', 'Charlie']; // Replace with real data
             $this->sendResponse(true, "Users retrieved successfully.", "", "", ['users' => $users]);
         } else if ((isset($input['show_gallery']) && $input['show_gallery'] === 'czarnolas')){
@@ -77,7 +77,7 @@ class ApiMethods extends Core
         } 
         else
         {
-            $this->sendResponse(false, "", "", "Unknown or missing 'action' parameter.");
+            $this->sendResponse(false, "", "", "Unknown or missing 'request' parameter.");
         }
     }
 
@@ -95,9 +95,9 @@ class ApiMethods extends Core
             return;
         }
 
-        // Dummy example action
-        if (isset($input['action'])) {
-            switch ($input['action']) {
+        // Dummy example request
+        if (isset($input['request'])) {
+            switch ($input['request']) {
                 case 'create_user':
                     if (empty($input['name'])) {
                         $this->sendResponse(false, "", "", "Name is required.");
@@ -114,11 +114,11 @@ class ApiMethods extends Core
                     break;
 
                 default:
-                    $this->sendResponse(false, "", "", "Unknown action: " . $input['action']);
+                    $this->sendResponse(false, "", "", "Unknown request: " . $input['request']);
                     break;
             }
         } else {
-            $this->sendResponse(false, "", "", "Missing 'action' field.");
+            $this->sendResponse(false, "", "", "Missing 'request' field.");
         }
     }
 
