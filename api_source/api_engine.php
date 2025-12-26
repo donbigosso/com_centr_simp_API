@@ -7,12 +7,12 @@
         include 'classes/api_methods.php';
     include 'classes/user_model.php';
 
-    
     include 'classes/api_request_handler.php';
+    $core = new Core();
     $db   = getenv('MYSQL_DATABASE');
     $user = getenv('MYSQL_USER');
     $pass = getenv('MYSQL_PASSWORD');
     $db = new DatabaseAccess('mysql', $db, $user, $pass);
     $api = new ApiMethods();
-    $api->processRequest(); // This will handle everything and output JSON
+    $api->processRequest($core); // This will handle everything and output JSON
 ?>

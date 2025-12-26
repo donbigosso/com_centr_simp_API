@@ -24,7 +24,7 @@ class ApiMethods extends Core
     /**
      * Main entry point: Process the incoming request and route accordingly
      */
-    public function processRequest(): void
+    public function processRequest($core): void
     {
         // Ensure a request method exists
         if (!isset($_SERVER['REQUEST_METHOD'])) {
@@ -36,7 +36,7 @@ class ApiMethods extends Core
 
         switch ($method) {
             case 'GET':
-                $this->handleGetRequest();
+                $this->handleGetRequest($core);
                 break;
             case 'POST':
                 $this->handlePostRequest();
@@ -55,7 +55,7 @@ class ApiMethods extends Core
     /**
      * Handle GET requests - override or extend this in child classes
      */
-    protected function handleGetRequest(): void
+    protected function handleGetRequest($core): void
     {
         // Example: Fetch data, list resources, etc.
         // You can access $_GET here safely
@@ -74,6 +74,11 @@ class ApiMethods extends Core
                     $users = ['Alice', 'Bob', 'Charlie'];
                     $this->sendResponse(true, "Users retrieved successfully.", "", "", ['users' => $users]);
                     break;
+                case 'list_files':{
+                    $folder = __DIR__ . '/../uploads';
+                    $this->sendResponse(true, "Files requested", "", "", ['files' => $core->create_file_details_table($folder)]);
+                    break;
+                }
                 default:
                 $this->sendResponse(false, "", "", "Unknown 'request' value: " . $input['request']);
             }
@@ -83,6 +88,9 @@ class ApiMethods extends Core
             $this->sendResponse(false, "", "", "Missing 'request' parameter.");
         }
     }
+
+    
+
 
     /**
      * Handle POST requests - override or extend this in child classes
