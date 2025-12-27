@@ -79,6 +79,9 @@ class ApiMethods extends Core
                     $this->sendResponse(true, "Files requested", "", "", ['files' => $core->create_file_details_table($folder)]);
                     break;
                 }
+                case 'download':
+                    $this->handle_download();
+                    break;  
                 default:
                 $this->sendResponse(false, "", "", "Unknown 'request' value: " . $input['request']);
             }
@@ -147,6 +150,26 @@ class ApiMethods extends Core
 
         // Fallback to $_POST if not JSON
         return $_POST;
+    }
+    
+    public function handle_download(){
+        if (isset($_GET['file'])) {
+            $file = 'uploads/' . basename($_GET['file']);  // Security: prevent directory traversal
+    
+            if (file_exists($file)) {
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+                header('Content-Length: ' . filesize($file));
+                header('Cache-Control: no-cache');
+                
+                readfile($file);
+                exit;  // Stop all further processing
+            } else {
+                http_response_code(404);
+                echo json_encode(['error' => 'File not found']);
+                exit;
+            }
+        }
     }
 
     /**
