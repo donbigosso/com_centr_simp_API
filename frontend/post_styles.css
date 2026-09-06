@@ -203,7 +203,18 @@
 
 /* Formatting tags rendered inside the preview (and inside .post-body,
    see below) — kept minimal since PostContentFunctions.js only ever
-   produces b/i/u/ol/ul/li/a nodes. */
+   produces b/i/u/br/p/ol/ul/li/a nodes. */
+
+.command-center-page .post-preview p,
+.command-center-page .post-body p {
+  margin: 1em 0 0;
+  text-indent: 2em; /* ~one tab */
+}
+
+.command-center-page .post-preview p:first-child,
+.command-center-page .post-body p:first-child {
+  margin-top: 0;
+}
 .command-center-page .post-preview b,
 .command-center-page .post-preview strong,
 .command-center-page .post-body b,

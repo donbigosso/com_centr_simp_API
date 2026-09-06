@@ -669,6 +669,8 @@ class PostAndMessageModel
      *   [b]bold text[/b]
      *   [i]italic text[/i]
      *   [u]underlined text[/u]
+     *   [br]                                     -> line break
+     *   [p]paragraph[/p]                         -> paragraph
      *   [ol][li]first[/li][li]second[/li][/ol]   -> ordered list
      *   [ul][li]first[/li][li]second[/li][/ul]   -> unordered list
      *   [url=https://example.com]link text[/url] -> link (http/https only)
@@ -691,11 +693,11 @@ class PostAndMessageModel
         // [tag] markup below is ever treated as formatting.
         $content = strip_tags($content);
 
-        $allowedTags = ['b', 'i', 'u', 'ol', 'ul', 'li'];
+        $allowedTags = ['b', 'i', 'u', 'p', 'ol', 'ul', 'li'];
 
         // Normalize/validate every [tag] occurrence. [url=...] additionally
         // requires a safe http(s) href or it is dropped (its label text is
-        // kept, the tag itself is not).
+        // kept, the tag itself is not). [br] is void: keep [br], drop [/br].
         $content = preg_replace_callback(
             '/\[(\/?)([a-zA-Z]+)(=[^\]]*)?\]/',
             function (array $matches) use ($allowedTags): string {
@@ -711,6 +713,10 @@ class PostAndMessageModel
                     $safeHref = $this->sanitize_href($href);
                     // Invalid/unsafe href: drop the tag, keep surrounding text intact.
                     return $safeHref !== null ? '[url=' . $safeHref . ']' : '';
+                }
+
+                if ($tag === 'br') {
+                    return $closing ? '' : '[br]';
                 }
 
                 if (in_array($tag, $allowedTags, true)) {

@@ -9,6 +9,8 @@
  *   [b]bold[/b]
  *   [i]italic[/i]
  *   [u]underline[/u]
+ *   [br]
+ *   [p]paragraph[/p]
  *   [ol] [li]item[/li] [li]item[/li] [/ol]
  *   [ul] [li]item[/li] [li]item[/li] [/ul]
  *   [url=https://example.com]link text[/url]
@@ -19,6 +21,7 @@
 
 const INLINE_TAGS = { b: 'b', i: 'i', u: 'u' };
 const LIST_TAGS = { ol: 'ol', ul: 'ul' };
+const VOID_TAGS = { br: true };
 
 // ---- DOM helpers (kept in line with existing createDIV/createLabel/createButton style) ----
 
@@ -84,7 +87,7 @@ function sanitizeHref(url)
 function tokenizePostContent(raw)
 {
     const tokens = [];
-    const tagPattern = /\[(\/?)(b|i|u|ol|ul|li|url)(=[^\]]*)?\]/gi;
+    const tagPattern = /\[(\/?)(b|i|u|br|p|ol|ul|li|url)(=[^\]]*)?\]/gi;
     let lastIndex = 0;
     let match;
 
@@ -134,7 +137,9 @@ function parseTokensToTree(tokens)
         if (token.type === 'open') {
             const node = { kind: 'tag', tag: token.tag, attr: token.attr, children: [] };
             current.children.push(node);
-            stack.push(node);
+            if (!VOID_TAGS[token.tag]) {
+                stack.push(node);
+            }
             continue;
         }
 
@@ -164,6 +169,16 @@ function buildDomFromNode(node)
         const fragment = document.createDocumentFragment();
         appendChildren(fragment, node.children);
         return fragment;
+    }
+
+    if (node.tag === 'br') {
+        return createElementOfType('br');
+    }
+
+    if (node.tag === 'p') {
+        const el = createElementOfType('p');
+        appendChildren(el, node.children);
+        return el;
     }
 
     if (INLINE_TAGS[node.tag]) {

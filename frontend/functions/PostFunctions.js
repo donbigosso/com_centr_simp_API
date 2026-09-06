@@ -10,6 +10,7 @@ import { createPictureWrapper, getGalleryFolder } from "./GalleryFunctions.js";
  * Post formatting reference
  * -------------------------
  *   [b]bold[/b]  [i]italic[/i]  [u]underline[/u]
+ *   [br]  [p]paragraph[/p]
  *   [ol][li]first[/li][/ol]   [ul][li]first[/li][/ul]
  *   [url=https://example.com]link text[/url]
  *
@@ -68,6 +69,8 @@ function buildPostFormBody(ids) {
   toolbar.appendChild(createToolbarButton("B", "Bold", () => wrapSelectionWithTag(textarea, "[b]", "[/b]")));
   toolbar.appendChild(createToolbarButton("I", "Italic", () => wrapSelectionWithTag(textarea, "[i]", "[/i]")));
   toolbar.appendChild(createToolbarButton("U", "Underline", () => wrapSelectionWithTag(textarea, "[u]", "[/u]")));
+  toolbar.appendChild(createToolbarButton("P", "Paragraph", () => wrapSelectionWithTag(textarea, "[p]", "[/p]")));
+  toolbar.appendChild(createToolbarButton("BR", "Line break", () => wrapSelectionWithTag(textarea, "[br]", "")));
   //toolbar.appendChild(createToolbarButton("1.", "Numbered list", () => wrapSelectionWithTag(textarea, "[ol][li]", "[/li][/ol]")));
   //toolbar.appendChild(createToolbarButton("•", "Bullet list", () => wrapSelectionWithTag(textarea, "[ul][li]", "[/li][/ul]")));
   toolbar.appendChild(createToolbarButton("Link", "Insert link", () => wrapSelectionAsLink(textarea)));
