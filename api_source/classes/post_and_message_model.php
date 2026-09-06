@@ -14,6 +14,7 @@ class PostAndMessageModel
     {
         $actor = trim((string)($input['name'] ?? ''));
         $ok = false;
+        $logDetail = '';
         try {
         $apiKeys = json_decode((string)getenv('API_KEYS'), true);
         $providedKey = isset($input['api_key']) ? (string)$input['api_key'] : '';
@@ -62,6 +63,7 @@ class PostAndMessageModel
         ]);
 
         $ok = $id > 0;
+        $logDetail = LogModel::id_detail($id);
         return [
             'success' => true,
             'message' => 'Contact message saved.',
@@ -69,7 +71,7 @@ class PostAndMessageModel
             'id' => $id,
         ];
         } finally {
-            (new LogModel())->record_result('create contact message', $ok, $actor !== '' ? $actor : '-');
+            (new LogModel())->record_result('create contact message', $ok, $actor !== '' ? $actor : '-', $logDetail);
         }
     }
     public function list_contact_messages(array $input): array
@@ -102,6 +104,7 @@ class PostAndMessageModel
     {
         $actor = '-';
         $ok = false;
+        $logDetail = LogModel::id_detail($input['id'] ?? 0);
         try {
         $userModel = new UserModel($this->db);
         $admin = $userModel->verify_admin_by_token($input);
@@ -142,7 +145,7 @@ class PostAndMessageModel
             'error' => '',
         ];
         } finally {
-            (new LogModel())->record_result('delete contact message - admin', $ok, $actor);
+            (new LogModel())->record_result('delete contact message - admin', $ok, $actor, $logDetail);
         }
     }
 
@@ -157,6 +160,7 @@ class PostAndMessageModel
     {
         $actor = '-';
         $ok = false;
+        $logDetail = '';
         try {
             if (!$this->is_valid_api_key($input)) {
                 return [
@@ -266,6 +270,7 @@ class PostAndMessageModel
             }
 
             $ok = true;
+            $logDetail = LogModel::id_detail($postId);
             return [
                 'success' => true,
                 'message' => 'Post created.',
@@ -281,7 +286,7 @@ class PostAndMessageModel
                 ],
             ];
         } finally {
-            (new LogModel())->record_result('create post', $ok, $actor);
+            (new LogModel())->record_result('create post', $ok, $actor, $logDetail);
         }
     }
 
@@ -295,6 +300,7 @@ class PostAndMessageModel
     {
         $actor = '-';
         $ok = false;
+        $logDetail = LogModel::id_detail($input['post_id'] ?? $input['id'] ?? 0);
         try {
             if (!$this->is_valid_api_key($input)) {
                 return [
@@ -385,7 +391,7 @@ class PostAndMessageModel
                 'error' => '',
             ];
         } finally {
-            (new LogModel())->record_result('delete post', $ok, $actor);
+            (new LogModel())->record_result('delete post', $ok, $actor, $logDetail);
         }
     }
 

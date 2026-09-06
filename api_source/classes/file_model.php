@@ -62,6 +62,12 @@ class FileModel {
         $token = $input['token'] ?? '';
         $username = $this->username_from_token($token);
         $ok = false;
+        $logDetail = trim((string)$old_filename);
+        if ($logDetail !== '' && trim((string)$new_filename) !== '') {
+            $logDetail .= ' -> ' . trim((string)$new_filename);
+        } elseif (trim((string)$new_filename) !== '') {
+            $logDetail = trim((string)$new_filename);
+        }
         try {
         $user = new UserModel($this->db);
         if (!$user->get_by_token($token)) {
@@ -89,7 +95,7 @@ class FileModel {
         $ok = true;
         return ["renamed" => true, "error" => ""];
         } finally {
-            (new LogModel())->record_result('rename file', $ok, $username);
+            (new LogModel())->record_result('rename file', $ok, $username, $logDetail);
         }
     }
     /**
@@ -319,6 +325,7 @@ class FileModel {
         $token = trim((string)($input['token'] ?? ''));
         $username = '-';
         $ok = false;
+        $logDetail = '';
         try {
         if ($token === '') {
             return $this->media_delete_response(false, '', 'Token is required.');
@@ -337,9 +344,10 @@ class FileModel {
         $username = (string)($users[0]['name'] ?? '-');
         $result = $this->delete_media_item_core($input);
         $ok = !empty($result['success']);
+        $logDetail = LogModel::id_detail($result['media_item_id'] ?? 0);
         return $result;
         } finally {
-            (new LogModel())->record_result('delete media item', $ok, $username);
+            (new LogModel())->record_result('delete media item', $ok, $username, $logDetail);
         }
     }
 
@@ -352,6 +360,7 @@ class FileModel {
         $token = trim((string)($input['token'] ?? ''));
         $username = '-';
         $ok = false;
+        $logDetail = '';
         try {
         if ($token === '') {
             return $this->media_delete_response(false, '', 'Token is required.');
@@ -378,9 +387,10 @@ class FileModel {
 
         $result = $this->delete_media_item_core($input);
         $ok = !empty($result['success']);
+        $logDetail = LogModel::id_detail($result['media_item_id'] ?? 0);
         return $result;
         } finally {
-            (new LogModel())->record_result('delete media item - admin', $ok, $username !== '' ? $username : '-');
+            (new LogModel())->record_result('delete media item - admin', $ok, $username !== '' ? $username : '-', $logDetail);
         }
     }
 
@@ -406,6 +416,7 @@ class FileModel {
     {
         $username = '-';
         $ok = false;
+        $logDetail = '';
         try {
         $token = trim((string)($input['token'] ?? ''));
         $galleryId = isset($input['gallery_id'])
@@ -587,6 +598,7 @@ class FileModel {
             $mediaResult = $galleryModel->get_gallery_media_item($galleryId, $mediaItemId);
 
             $ok = true;
+            $logDetail = LogModel::id_detail($mediaItemId);
             return [
                 'success' => true,
                 'message' => 'Picture uploaded successfully.',
@@ -608,7 +620,7 @@ class FileModel {
             return $this->gallery_media_upload_fail('Failed to upload picture.');
         }
         } finally {
-            (new LogModel())->record_result('upload gallery media', $ok, $username !== '' ? $username : '-');
+            (new LogModel())->record_result('upload gallery media', $ok, $username !== '' ? $username : '-', $logDetail);
         }
     }
 
@@ -628,6 +640,7 @@ class FileModel {
     {
         $username = '-';
         $ok = false;
+        $logDetail = '';
         try {
             $token = trim((string)($input['token'] ?? ''));
             $postId = isset($input['post_id'])
@@ -798,6 +811,7 @@ class FileModel {
                 ]);
 
                 $ok = true;
+                $logDetail = LogModel::id_detail($mediaItemId);
                 return [
                     'success' => true,
                     'message' => 'Picture uploaded successfully.',
@@ -816,7 +830,7 @@ class FileModel {
                 return $this->post_media_upload_fail('Failed to upload picture.');
             }
         } finally {
-            (new LogModel())->record_result('upload post media', $ok, $username !== '' ? $username : '-');
+            (new LogModel())->record_result('upload post media', $ok, $username !== '' ? $username : '-', $logDetail);
         }
     }
 
@@ -918,6 +932,7 @@ class FileModel {
         $file_to_delete = $input['file_to_delete'] ?? '';
         $username = $this->username_from_token((string)($input['token'] ?? ''));
         $ok = false;
+        $logDetail = trim((string)$file_to_delete);
         try {
         $file_list = $this->show_files_in_folder($this->upload_folder);
 
@@ -928,7 +943,7 @@ class FileModel {
         }
         return ["deleted" => false, "error" => "File does not exist."];
         } finally {
-            (new LogModel())->record_result('delete file', $ok, $username);
+            (new LogModel())->record_result('delete file', $ok, $username, $logDetail);
         }
     }
 
@@ -938,6 +953,7 @@ class FileModel {
         $token = $input['token'] ?? '';
         $username = $this->username_from_token((string)$token);
         $ok = false;
+        $logDetail = '';
         try {
         $user = new UserModel($this->db);
 
@@ -1010,6 +1026,7 @@ class FileModel {
         }
 
         $ok = !empty($final_file_details);
+        $logDetail = implode(', ', array_column($final_file_details, 0));
         return [
             "success" => true,
             "error" => $error,
@@ -1017,7 +1034,7 @@ class FileModel {
             "uploaded_files" => $final_file_details
         ];
         } finally {
-            (new LogModel())->record_result('upload file', $ok, $username);
+            (new LogModel())->record_result('upload file', $ok, $username, $logDetail);
         }
     }
 
