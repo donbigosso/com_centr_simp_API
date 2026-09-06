@@ -43,16 +43,7 @@ const test_response= await requestDeleteFile("	sddefault.jpg", "supertoken1234")
     
 }
 
-export function createImagepics(){
-  const wrapper = createPictureWrapper();
-  
-  for (let i = 0; i < 16; i++) {
-    const picFilename = "Image_0000"+i+".jpeg";
-    const tile = createMediaTilePic("../galleries/test_junk/regular/"+picFilename, "Title", "Caption");
-      wrapper.appendChild(tile);
-    }
-  document.getElementById("pics").appendChild(wrapper);
-}
+
 
 export async function renderLastPost(container) {
   if (!(container instanceof HTMLElement)) {
@@ -99,8 +90,8 @@ export async function runtCCtests (){
   
   // Keep visible so homepage post create/read can be tested
   if (testArea) {
-    testArea.classList.remove("d-none");
+   // testArea.classList.remove("d-none");
   }
 
-  await initHomepagePostTest();
+ // await initHomepagePostTest();
 }
